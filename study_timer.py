@@ -1,12 +1,15 @@
 import json
 from datetime import datetime
 import os
+from sys import displayhook
 
-# セッションデータの保存先
+from config import DEBUG
+
+# 保存先パス
 DATA_PATH = "data/sessions.json"
 
-# 現在アクティブな作業セッション
-active_sessions = {}
+# 現在動いているセッション
+active_sessions = dict()
 
 # セッションデータの読み込み
 def _load_data():
@@ -24,7 +27,7 @@ def _save_data(data):
     os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
     # ディレクトリ内のファイルにデータを保存する
     with open(DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 # セッションを開始する
 async def start_session(member):
@@ -32,8 +35,10 @@ async def start_session(member):
     # セッションをスタートしたユーザー情報がまだ登録されていない場合
     if user_id not in active_sessions:
         # 現在時刻をユーザーの作業開始時刻として登録
-        active_sessions[user_id]= datetime.now().isoformat()
-
+        active_sessions[user_id]= {
+            "start": datetime.now().isoformat(),
+            "display_name": member.display_name
+        }
 # セッションの終了を記録する
 async def end_session(member):
     user_id = str(member.id)
@@ -44,21 +49,29 @@ async def end_session(member):
         # 現在の時刻を酋長時刻として取得
         end_time = datetime.now()
         # 作業時間を計算
-        print(end_time-start_time)
         duration = (end_time-start_time).total_seconds() / 60 # 分単位
-        print(duration)
 
         # セッションファイルの読み込み/更新
         data = _load_data()
-        data[user_id] = data.get(user_id, 0) + duration
+
+        if user_id not in data:
+            data[user_id] = {
+                "display_name": member.display_name,
+                "total_minutes": 0.0,
+                "sessions": []
+            }
+
+        data[user_id]["sessions"] = data.get(user_id, 0) + duration
         _save_data(data)
-        print(data)
 
         # 作業終了メッセージ
         channel = member.guild.system_channel
         if channel:
-            await channel.send(
-                f"✅ {member.display_name} さんの作業終了\n"
-                f"今回の作業時間：{duration:.1f} 分\n"
-                f"累積作業時間：{data[user_id]:.1f} 分"
-            )
+            message = (f"✅ {member.display_name} さんの作業終了\n "
+                       f"今回の作業時間：{duration:.1f} 分\n ")
+            if(DEBUG):
+                print(message)
+            else:
+                await channel.send(message)
+
+
