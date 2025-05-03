@@ -8,6 +8,6 @@ class BaseModel(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, user_id:str, data: dict):
         """辞書からインスタンスを復元する"""
         pass

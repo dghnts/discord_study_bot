@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
 from config import TOKEN, TRACKED_VC_ID
-from repository.sqlite_storage import SqliteStorage
-from timer import TimerService
-from controller.event_handler import setup_event_handlers
-from controller.command_loader import register_all_commands
+from service.session_service import SessionService
+from service.user_service import UserService
+from service.timer_service import TimerService
+from utils.event_loader import register_all_events
+from utils.command_loader import register_all_commands
+from utils.event_loader import register_all_events
 
 # Intents設定
 intents = discord.Intents.default()
@@ -15,15 +17,11 @@ intents.message_content = True
 # Botインスタンス作成
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ストレージとサービス初期化
-storage = SqliteStorage()
-timer_service = TimerService(storage)
-
 # イベントハンドラ登録
-setup_event_handlers(bot, timer_service, TRACKED_VC_ID)
+register_all_events(bot, SessionService(), TRACKED_VC_ID)
 
 # コマンド登録
-register_all_commands(bot, timer_service)
+#register_all_commands(bot, timer_service, user_service)
 
 # Bot起動
 bot.run(TOKEN)

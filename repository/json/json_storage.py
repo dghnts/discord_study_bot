@@ -2,8 +2,8 @@ import json
 import os
 from datetime import datetime
 
-from domain.session import Session
-from domain.user import User
+from domain.sessions import Session
+from domain.users import User
 from repository.storage_interface import StorageInterface
 
 class Storage(StorageInterface):
@@ -43,13 +43,13 @@ class Storage(StorageInterface):
         except Exception as e:
             print(f"⚠️ 予期せぬ保存エラー: {e}")
 
-    def start_session(self, user_id: str, display_name: str):
+    def start(self, user_id: str, display_name: str):
         """セッション開始（開始時間を一時的に記憶）"""
         if user_id not in self.users:
             self.users[user_id] = User(user_id, display_name)
         self.users[user_id].current_start_time = datetime.now()
 
-    def end_session(self, user_id: str, display_name: str):
+    def end(self, user_id: str, display_name: str):
         """セッション終了（セッション作成・保存）"""
         user = self.users.get(user_id)
         if user is None:
