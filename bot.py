@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from config import TOKEN, TRACKED_VC_ID
-from repository.storage import Storage
+from repository.sqlite_storage import SqliteStorage
 from timer import TimerService
 from controller.event_handler import setup_event_handlers
 from controller.command_loader import register_all_commands
@@ -16,7 +16,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # ストレージとサービス初期化
-storage = Storage()
+storage = SqliteStorage()
 timer_service = TimerService(storage)
 
 # イベントハンドラ登録
