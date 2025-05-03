@@ -4,9 +4,9 @@ from datetime import datetime
 
 from domain.session import Session
 from domain.user import User
+from repository.storage_interface import StorageInterface
 
-
-class Storage:
+class Storage(StorageInterface):
     def __init__(self, filepath="data/sessions.json"):
         self.filepath = filepath
         self.users = {}  # Dict[str, User]

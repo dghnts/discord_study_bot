@@ -1,7 +1,7 @@
-from repository.storage import Storage
+from repository.storage import StorageInterface
 
 class TimerService:
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: StorageInterface):
         self.storage = storage
 
     def start_session(self, user_id: str, display_name: str):
