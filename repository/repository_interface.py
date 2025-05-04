@@ -1,5 +1,7 @@
 import sqlite3
-class ServiceInterface():
+
+
+class BaseRepository:
 
     def __init__(self, db_path="data/sessions.db"):
         self.db_path = db_path

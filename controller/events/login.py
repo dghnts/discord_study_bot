@@ -1,6 +1,5 @@
 import discord
 
-from service.session_service import SessionService
 
 def login_event(bot: discord.Client):
     @bot.event

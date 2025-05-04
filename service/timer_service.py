@@ -1,37 +1,20 @@
-from datetime import datetime
-
-from repository.storage_interface import StorageInterface
+from domain.session import Session
+from repository.session_repository import SessionRepository
 
 
 class TimerService:
-    def __init__(self, storage: StorageInterface):
-        self.storage = storage
+    def __init__(self, session_repo: SessionRepository):
+        self.session_repo = session_repo
 
-    def total_minutes(self, date=None, user_id=None,session_sql=None):
-        sessions = []
+    def get_total_time_by_user(self, user_id: str) -> float:
+        """ユーザーごとの累積作業時間（分）を返す"""
+        raw_sessions = self.session_repo.get_by_user(user_id)
+        sessions = [Session.from_dict(row) for row in raw_sessions]
+        return sum(s.duration for s in sessions)
 
-        if not date:
-            """日時の指定がないとき"""
-            """ユーザーのセッション情報をすべて取得する"""
-            sessions = session_sql["select_user_sessions"]
-        else:
-            """日時の指定があるとき"""
-            sessions = [
-                session for session \
-                in session_sql["select_user_sessions_by_date"] \
-                if session.end_time == date
-            ]
+    def get_daily_time_by_user(self, user_id: str) -> float:
+        """日ごとの作業時間を {日付: 分数} 形式で返す"""
+        raw_sessions = self.session_repo.get_today_by_user(user_id)
+        sessions = [Session.from_dict(row) for row in raw_sessions]
 
-        ret = 0
-
-        for session in sessions:
-            ret += session.duration
-
-        return ret
-
-    def get_today_minutes(self, user_id: str) -> float:
-        today = datetime.now().date()
-        user = self.storage.get_user(user_id)
-
-        print(user)
-        return 0.0
+        return sum(s.duration for s in sessions)

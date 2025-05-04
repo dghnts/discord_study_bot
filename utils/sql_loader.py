@@ -2,6 +2,7 @@ from pathlib import Path
 
 SQL_DIR = Path("sql")
 
+
 def load_sql(table: str) -> dict:
     sqls_table = SQL_DIR / f"{table}"
 

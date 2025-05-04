@@ -1,11 +1,21 @@
 from discord.ext import commands
-def register(bot: commands.Bot, user_service):
+
+from repository.user_repository import UserRepository
+from service.timer_service import TimerService
+from service.user_service import UserService
+
+
+def register(bot: commands.Bot, timer_service: TimerService, user_repo: UserRepository):
     @bot.command(name="status")
     async def status(ctx):
+        user_service = UserService(user_repo)
         user_id = str(ctx.author.id)
-        user = user_service.get_user_info(user_id)
+        display_name = ctx.author.display_name
 
-        if user:
-            await ctx.send(f"📊 {ctx.author.display_name} さんの累積作業時間は  分です。")
-        else:
-            await ctx.send("⚠️ 作業履歴が見つかりませんでした。")
+        # ユーザー登録（初回のみ）
+        user_service.register_if_new(user_id, display_name)
+
+        # 累積作業時間を取得
+        total_minutes = timer_service.get_total_time_by_user(user_id)
+
+        await ctx.send(f"📊 {display_name} さんの累積作業時間は {total_minutes:.1f} 分です。")

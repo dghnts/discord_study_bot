@@ -1,5 +1,5 @@
-from domain.basemodel import BaseModel
-from utils.sql_loader import load_sql
+from domain.base_model import BaseModel
+
 
 class User(BaseModel):
     def __init__(self, user_id: str, display_name: str):
@@ -9,16 +9,14 @@ class User(BaseModel):
     def to_dict(self) -> dict:
         """Userを辞書に変換する"""
         return {
-            "display_name": self.display_name,
-            "sessions": [session.to_dict() for session in self.sessions]
+            "user_id": self.user_id,
+            "display_name": self.display_name
         }
 
     @classmethod
-    def from_dict(cls, user_id: str, data: dict):
+    def from_dict(cls, data: dict):
         """辞書からUserを復元する"""
-        user = cls(user_id, data["display_name"])
-
-        return user
+        return cls(data["user_id"], data["display_name"])
 
     def __repr__(self):
         return f"<User id={self.user_id} name={self.display_name}>"
