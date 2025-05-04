@@ -28,4 +28,5 @@ register_all_events(bot, session_repo, user_repo, TRACKED_VC_ID)
 register_all_commands(bot, timer_service, user_repo)
 
 # Bot起動
-bot.run(TOKEN)
+def run_bot():
+    bot.run(TOKEN)
