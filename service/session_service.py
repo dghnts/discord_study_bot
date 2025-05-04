@@ -19,10 +19,10 @@ class SessionService(ServiceInterface):
         self.session_sql = load_sql("sessions")
 
 
-    def add_new_session(self, user_id: str):
+    def add_new_session(self, session_data: tuple):
         with self._connect() as conn:
             cursor = conn.cursor()
-            cursor.execute(self.session_sql["insert"], (datetime.now().isoformat(), user_id))
+            cursor.execute(self.session_sql["insert"], session_data)
             conn.commit()
 
 

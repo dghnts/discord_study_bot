@@ -1,5 +1,4 @@
 from discord.ext import commands
-from utils.total_minutes import total_minutes
 def register(bot: commands.Bot, user_service):
     @bot.command(name="status")
     async def status(ctx):

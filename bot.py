@@ -18,7 +18,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # イベントハンドラ登録
-register_all_events(bot, SessionService(), TRACKED_VC_ID)
+register_all_events(bot, TRACKED_VC_ID)
 
 # コマンド登録
 #register_all_commands(bot, timer_service, user_service)

@@ -18,7 +18,7 @@ class Storage(StorageInterface):
             self.users = {}
             return
         try:
-            with open(self.filepath, "r", encoding="utf-8") as f:
+            with open(self.filepath, "r+", encoding="utf-8") as f:
                 raw_data = json.load(f)
                 self.users = {
                     user_id: User.from_dict(user_id, user_data)
