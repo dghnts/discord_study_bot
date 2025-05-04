@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users(
+CREATE TABLE IF NOT EXISTS sessions(
     id INTEGER PRIMARY KEY AUTOINCREMENT.
     start_time TEXT,
     end_time TEXT,
