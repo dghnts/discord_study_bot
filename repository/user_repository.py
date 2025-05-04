@@ -1,4 +1,4 @@
-from repository.repository_interface import BaseRepository
+from repository.base_repository import BaseRepository
 from utils.sql_loader import load_sql
 
 

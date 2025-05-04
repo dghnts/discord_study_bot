@@ -8,5 +8,7 @@ load_dotenv()
 # 環境変数から読み取り
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 TRACKED_VC_ID = int(os.getenv("TRACKED_VC_ID", 0))  # デフォルト値0
+DB_PATH = os.getenv("DB_PATH")
+
 
 DEBUG = True  # デバッグ用変数
